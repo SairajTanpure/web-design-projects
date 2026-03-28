@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumière Beauty Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--blush:#f5e6e0;--rose:#d4907a;--deep-rose:#a05a48;--sage:#c8d5c0;--cream:#faf7f4;--dark:#2a1f1a;--text:#5a4040;--muted:#9a8a84;--gold:#c4a882}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--dark);font-family:'Jost',sans-serif;overflow-x:hidden}
+  ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--cream)}::-webkit-scrollbar-thumb{background:var(--rose);border-radius:3px}
+
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.4rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(250,247,244,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,144,122,.15);transition:box-shadow .3s}
+  nav.scrolled{box-shadow:0 2px 20px rgba(160,90,72,.1)}
+  .logo{font-family:'Libre Baskerville',serif;font-size:1.4rem;color:var(--dark);font-style:italic;cursor:pointer}
+  .logo span{color:var(--rose)}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:var(--text);text-decoration:none;font-size:.85rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover{color:var(--rose)}
+  .nav-book{background:var(--rose);color:white;padding:.65rem 1.8rem;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;border-radius:100px;font-weight:500;transition:all .3s}
+  .nav-book:hover{background:var(--deep-rose);transform:translateY(-1px)}
+
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;position:relative;overflow:hidden;padding-top:5rem}
+  .hero-left{padding:6rem 4rem 6rem 6rem;display:flex;flex-direction:column;justify-content:center}
+  .hero-right{height:100vh;background:linear-gradient(135deg,var(--blush),#e8d0c8);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .hero-right::before{content:'✿';font-size:25rem;color:rgba(212,144,122,.07);position:absolute;animation:spin 30s linear infinite;pointer-events:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hero-circle{width:300px;height:300px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--deep-rose));display:flex;align-items:center;justify-content:center;font-size:7rem;position:relative;z-index:2;box-shadow:0 40px 80px rgba(160,90,72,.3)}
+  .floating-tag{position:absolute;z-index:3;background:white;padding:.7rem 1.1rem;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,.1);font-size:.82rem;font-weight:500;animation:float 4s ease-in-out infinite}
+  .floating-tag.one{top:25%;left:5%;animation-delay:0s}
+  .floating-tag.two{bottom:25%;right:5%;animation-delay:2s}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .tag-star{color:var(--rose)}
+  .hero-eyebrow{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose);margin-bottom:1.5rem;display:flex;align-items:center;gap:.8rem}
+  .eyebrow-line{width:30px;height:1px;background:var(--rose)}
+  h1{font-family:'Libre Baskerville',serif;font-size:clamp(2.5rem,4vw,4.2rem);line-height:1.2;color:var(--dark);margin-bottom:1.5rem;font-weight:700}
+  h1 em{color:var(--rose);font-style:italic}
+  .hero-sub{font-size:1rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem;max-width:400px;font-weight:300}
+  .hero-cta{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+  .btn-rose{background:var(--rose);color:white;padding:.9rem 2.2rem;border-radius:100px;font-size:.85rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;display:inline-block}
+  .btn-rose:hover{background:var(--deep-rose);transform:translateY(-2px)}
+  .btn-ghost{color:var(--text);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;font-weight:400;display:flex;align-items:center;gap:.5rem;transition:color .3s}
+  .btn-ghost:hover{color:var(--rose)}
+  .hero-trust{margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(212,144,122,.15);display:flex;gap:2rem;flex-wrap:wrap}
+  .trust-item{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--muted)}
+  .trust-icon{color:var(--rose)}
+
+  .services{padding:7rem 5rem}
+  .section-header{text-align:center;margin-bottom:4rem}
+  .section-tag{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose);margin-bottom:1rem;display:block}
+  h2{font-family:'Libre Baskerville',serif;font-size:clamp(2rem,3.5vw,3rem);color:var(--dark);font-weight:700;line-height:1.3}
+  h2 em{font-style:italic;color:var(--rose)}
+  .services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+  .service-card{border-radius:24px;padding:2.5rem 2rem;text-align:center;transition:all .4s;cursor:default}
+  .service-card:nth-child(1){background:var(--blush)}
+  .service-card:nth-child(2){background:var(--sage)}
+  .service-card:nth-child(3){background:#e8dfd8}
+  .service-card:nth-child(4){background:#f0e8e4}
+  .service-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(160,90,72,.12)}
+  .service-icon{font-size:2.5rem;margin-bottom:1.2rem}
+  .service-name{font-family:'Libre Baskerville',serif;font-size:1.15rem;color:var(--dark);margin-bottom:.5rem}
+  .service-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.5rem}
+  .service-price{font-size:1.1rem;color:var(--rose);font-weight:600}
+  .service-btn{margin-top:1rem;padding:.55rem 1.4rem;background:transparent;border:1px solid var(--rose);color:var(--rose);border-radius:100px;font-family:'Jost',sans-serif;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+  .service-btn:hover{background:var(--rose);color:white}
+
+  .team{padding:7rem 5rem;background:var(--blush)}
+  .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1000px;margin:4rem auto 0}
+  .team-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);transition:transform .3s}
+  .team-card:hover{transform:translateY(-6px)}
+  .team-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem}
+  .team-card:nth-child(1) .team-img{background:linear-gradient(135deg,#f5e6e0,#e8d0c8)}
+  .team-card:nth-child(2) .team-img{background:linear-gradient(135deg,#c8d5c0,#b5c5ad)}
+  .team-card:nth-child(3) .team-img{background:linear-gradient(135deg,#e8dfd8,#d8cfc8)}
+  .team-info{padding:1.5rem}
+  .team-name{font-family:'Libre Baskerville',serif;font-size:1.05rem;color:var(--dark);margin-bottom:.3rem}
+  .team-role{font-size:.78rem;color:var(--rose);letter-spacing:.1em;text-transform:uppercase}
+  .team-rating{font-size:.82rem;color:var(--muted);margin-top:.4rem}
+  .team-book-btn{margin-top:.8rem;padding:.45rem 1.1rem;background:var(--blush);border:none;color:var(--rose);border-radius:100px;font-family:'Jost',sans-serif;font-size:.78rem;cursor:pointer;letter-spacing:.05em;transition:all .3s}
+  .team-book-btn:hover{background:var(--rose);color:white}
+
+  .booking{padding:7rem 5rem}
+  .booking-wrapper{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .booking-info h2{text-align:left;margin-bottom:1rem}
+  .booking-info p{color:var(--muted);line-height:1.8;margin-bottom:2rem}
+  .hours-list{list-style:none}
+  .hours-list li{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(212,144,122,.1);font-size:.9rem;color:var(--text)}
+  .booking-form{background:var(--blush);padding:2.5rem;border-radius:24px}
+  .form-group{margin-bottom:1.1rem}
+  .form-group label{display:block;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+  .form-group input,.form-group select{width:100%;padding:.85rem 1rem;background:white;border:1px solid rgba(212,144,122,.2);border-radius:10px;color:var(--dark);font-family:'Jost',sans-serif;font-size:.95rem;outline:none;transition:border-color .3s}
+  .form-group input:focus,.form-group select:focus{border-color:var(--rose)}
+  .form-group input.error,.form-group select.error{border-color:#e05555}
+  .form-group select option{background:white}
+  .err{color:#e05555;font-size:.72rem;margin-top:.25rem;display:none}
+  .err.show{display:block}
+  .book-btn{width:100%;padding:1rem;background:var(--rose);color:white;border:none;border-radius:100px;cursor:pointer;font-family:'Jost',sans-serif;font-size:.9rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:all .3s;margin-top:.5rem}
+  .book-btn:hover{background:var(--deep-rose);transform:translateY(-1px)}
+  .book-btn:active{transform:scale(.98)}
+  .book-success{display:none;background:white;border:1px solid rgba(212,144,122,.3);padding:1.5rem;border-radius:16px;text-align:center}
+  .book-success.show{display:block}
+  .book-success h3{font-family:'Libre Baskerville',serif;color:var(--rose);margin-bottom:.5rem}
+
+  .testimonials{padding:7rem 5rem;background:linear-gradient(135deg,var(--dark),#3a2a22);color:white}
+  .testimonials .section-tag{color:var(--gold)}
+  .testimonials h2{color:white;text-align:center;margin-bottom:3rem}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto}
+  .testi-card{background:rgba(255,255,255,.06);border-radius:16px;padding:2rem;border:1px solid rgba(255,255,255,.08);transition:transform .3s}
+  .testi-card:hover{transform:translateY(-4px)}
+  .testi-stars{color:var(--gold);margin-bottom:1rem}
+  .testi-text{font-size:.93rem;color:rgba(255,255,255,.68);line-height:1.7;margin-bottom:1.5rem;font-style:italic}
+  .testi-author{font-size:.83rem;color:var(--gold);font-weight:500}
+
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:white;padding:.9rem 1.6rem;font-size:.85rem;border-radius:12px;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;max-width:300px}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  footer{padding:3rem 5rem;background:var(--dark);color:rgba(255,255,255,.5);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  .footer-logo{font-family:'Libre Baskerville',serif;font-size:1.2rem;color:white;font-style:italic;cursor:pointer}
+  .footer-logo span{color:var(--rose)}
+  .footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+  .footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.8rem;transition:color .3s}
+  .footer-links a:hover{color:var(--rose)}
+  .footer-copy{font-size:.8rem}
+
+  .back-top{position:fixed;bottom:2rem;left:2rem;width:42px;height:42px;background:var(--rose);color:white;border:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;z-index:50;border-radius:50%;font-weight:700}
+  .back-top.show{opacity:1;pointer-events:auto}
+  .back-top:hover{background:var(--deep-rose)}
+
+  .reveal{opacity:0;transform:translateY(25px);transition:opacity .65s ease,transform .65s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+  .hero-left>*{opacity:0;animation:fadeUp .7s ease forwards}
+  .hero-eyebrow{animation-delay:.1s}
+  .hero-left h1{animation-delay:.25s}
+  .hero-sub{animation-delay:.4s}
+  .hero-cta{animation-delay:.55s}
+  .hero-trust{animation-delay:.7s}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<nav id="nav">
+  <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Lumi<span>ère</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Artists</a></li>
+    <li><a href="#booking">Book</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <button class="nav-book" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book Appointment</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><div class="eyebrow-line"></div>Premium Beauty Studio</div>
+    <h1>Where Beauty<br>Meets <em>Art</em> &<br>Confidence</h1>
+    <p class="hero-sub">Experience the art of beauty transformation at Lumière — where every appointment is a personal journey curated just for you.</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn-rose">Book Appointment</a>
+      <a href="#services" class="btn-ghost">Explore Services →</a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-item"><span class="trust-icon">★★★★★</span>&nbsp;4.9 Rating</div>
+      <div class="trust-item"><span class="trust-icon">💄</span>&nbsp;2000+ Clients</div>
+      <div class="trust-item"><span class="trust-icon">🏆</span>&nbsp;Award Winning</div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-circle">💆‍♀️</div>
+    <div class="floating-tag one"><span class="tag-star">★</span> Hair Styling</div>
+    <div class="floating-tag two">💅 Nail Art & Care</div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <span class="section-tag">What We Offer</span>
+    <h2>Our <em>Signature</em> Services</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">💇‍♀️</div>
+      <div class="service-name">Hair Styling</div>
+      <div class="service-desc">Cut, colour, balayage, blowout and more. Every style crafted to perfection.</div>
+      <div class="service-price">From ₹800</div>
+      <button class="service-btn" onclick="bookService('Hair Styling')">Book Now</button>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">💆‍♀️</div>
+      <div class="service-name">Skin Treatments</div>
+      <div class="service-desc">Facials, clean-ups, hydra facials, and anti-aging treatments by skin experts.</div>
+      <div class="service-price">From ₹1,200</div>
+      <button class="service-btn" onclick="bookService('Skin Treatment')">Book Now</button>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">💅</div>
+      <div class="service-name">Nail Art</div>
+      <div class="service-desc">Gel nails, nail art, manicure & pedicure with premium quality products.</div>
+      <div class="service-price">From ₹500</div>
+      <button class="service-btn" onclick="bookService('Nail Art')">Book Now</button>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">✨</div>
+      <div class="service-name">Bridal Packages</div>
+      <div class="service-desc">Complete bridal makeover with trials, day-of glam and more.</div>
+      <div class="service-price">From ₹8,000</div>
+      <button class="service-btn" onclick="bookService('Bridal Package')">Book Now</button>
+    </div>
+  </div>
+</section>
+
+<section class="team" id="team">
+  <div class="section-header reveal">
+    <span class="section-tag">Our Artists</span>
+    <h2>Meet the <em>Experts</em></h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-img">👩‍🎨</div>
+      <div class="team-info">
+        <div class="team-name">Priya Sharma</div>
+        <div class="team-role">Senior Stylist & Colourist</div>
+        <div class="team-rating">★★★★★ · 8 years experience</div>
+        <button class="team-book-btn" onclick="bookArtist('Priya Sharma')">Book with Priya</button>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-img">👩</div>
+      <div class="team-info">
+        <div class="team-name">Ananya Nair</div>
+        <div class="team-role">Skin & Beauty Therapist</div>
+        <div class="team-rating">★★★★★ · 6 years experience</div>
+        <button class="team-book-btn" onclick="bookArtist('Ananya Nair')">Book with Ananya</button>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-img">👩‍💼</div>
+      <div class="team-info">
+        <div class="team-name">Riya Kapoor</div>
+        <div class="team-role">Nail Artist & Brow Expert</div>
+        <div class="team-rating">★★★★★ · 5 years experience</div>
+        <button class="team-book-btn" onclick="bookArtist('Riya Kapoor')">Book with Riya</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="booking">
+  <div class="booking-wrapper">
+    <div class="booking-info reveal">
+      <span class="section-tag" style="display:block;margin-bottom:.5rem">Book Now</span>
+      <h2>Reserve Your <em>Spot</em></h2>
+      <p>Walk into your most confident self. Book your appointment today and let our artists take care of the rest.</p>
+      <ul class="hours-list">
+        <li><span>Monday – Friday</span><span>9:00 AM – 8:00 PM</span></li>
+        <li><span>Saturday</span><span>9:00 AM – 9:00 PM</span></li>
+        <li><span>Sunday</span><span>10:00 AM – 6:00 PM</span></li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <div class="booking-form" id="bookingForm">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" id="bName" placeholder="Full name">
+          <div class="err" id="eBname">Please enter your name.</div>
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="bPhone" placeholder="+91 00000 00000">
+          <div class="err" id="eBphone">Please enter a valid number.</div>
+        </div>
+        <div class="form-group">
+          <label>Service *</label>
+          <select id="bService">
+            <option value="">Select a service</option>
+            <option>Hair Styling</option>
+            <option>Skin Treatment</option>
+            <option>Nail Art</option>
+            <option>Bridal Package</option>
+          </select>
+          <div class="err" id="eBservice">Please select a service.</div>
+        </div>
+        <div class="form-group">
+          <label>Preferred Date *</label>
+          <input type="date" id="bDate">
+          <div class="err" id="eBdate">Please select a date.</div>
+        </div>
+        <div class="form-group">
+          <label>Preferred Artist</label>
+          <select id="bArtist">
+            <option value="">No preference</option>
+            <option>Priya Sharma</option>
+            <option>Ananya Nair</option>
+            <option>Riya Kapoor</option>
+          </select>
+        </div>
+        <button class="book-btn" onclick="submitBooking()">Confirm Appointment</button>
+      </div>
+      <div class="book-success" id="bookSuccess">
+        <h3>💄 Appointment Confirmed!</h3>
+        <p style="color:var(--muted);margin-top:.5rem;font-size:.9rem">We'll call you to confirm your slot. See you soon at Lumière!</p>
+        <button class="book-btn" style="margin-top:1.2rem" onclick="resetBooking()">Book Another</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonials">
+  <div class="section-header reveal">
+    <span class="section-tag">Testimonials</span>
+    <h2>What Our Clients Say</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Absolutely loved my bridal makeover! Priya understood exactly what I wanted and delivered beyond my expectations. Felt like a queen!"</div>
+      <div class="testi-author">— Sneha Kulkarni, Pune</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Best salon in the city. The hydra facial left my skin glowing for weeks. I'm a regular now and won't go anywhere else!"</div>
+      <div class="testi-author">— Meera Joshi, Nashik</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Riya's nail art is incredible. Every time I come in she surprises me with something new and beautiful. Highly recommend!"</div>
+      <div class="testi-author">— Divya Patel, Aurangabad</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Lumi<span>ère</span> Beauty</div>
+  <div class="footer-links">
+    <a href="#" onclick="toast('Opening Instagram ↗')">Instagram</a>
+    <a href="#" onclick="toast('Opening Facebook ↗')">Facebook</a>
+    <a href="#" onclick="toast('Opening Google Maps ↗')">Maps</a>
+    <a href="#" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book</a>
+  </div>
+  <div class="footer-copy">© 2025 Lumière Beauty Studio</div>
+</footer>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
+  document.getElementById('backTop').classList.toggle('show',scrollY>400);
+});
+
+// Smooth anchors
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// Scroll reveal
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// Toast
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+// Set min date
+const bd=document.getElementById('bDate');
+const now=new Date();
+bd.min=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+
+// Book service (auto-fill select + scroll)
+function bookService(name){
+  document.getElementById('bService').value=name;
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>toast(`✓ ${name} selected! Fill in your details below.`),600);
+}
+
+// Book artist (auto-fill artist select + scroll)
+function bookArtist(name){
+  document.getElementById('bArtist').value=name;
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>toast(`✓ Booking with ${name}! Fill in your details below.`),600);
+}
+
+// Form validation & submit
+function submitBooking(){
+  const fields=[
+    {el:'bName',  err:'eBname',    check:v=>v.trim().length>1},
+    {el:'bPhone', err:'eBphone',   check:v=>/^[\d\s\+\-]{8,}$/.test(v)},
+    {el:'bService',err:'eBservice',check:v=>!!v},
+    {el:'bDate',  err:'eBdate',    check:v=>!!v}
+  ];
+  let ok=true;
+  fields.forEach(({el,err,check})=>{
+    const inp=document.getElementById(el);
+    const valid=check(inp.value);
+    inp.classList.toggle('error',!valid);
+    document.getElementById(err).classList.toggle('show',!valid);
+    if(!valid) ok=false;
+  });
+  if(ok){
+    document.getElementById('bookingForm').style.display='none';
+    document.getElementById('bookSuccess').classList.add('show');
+    toast('💄 Appointment booked! We\'ll call you shortly.');
+  }
+}
+
+function resetBooking(){
+  document.getElementById('bookingForm').style.display='block';
+  document.getElementById('bookSuccess').classList.remove('show');
+  ['bName','bPhone','bDate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bService').value='';
+  document.getElementById('bArtist').value='';
+}
+</script>
+</body>
+</html>

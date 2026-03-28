@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember & Oak — Fine Dining</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0a0704;--deep:#110e08;--amber:#c8832a;--gold:#e8b96a;--cream:#f5ede0;--text:#d4c4aa;--muted:#7a6a55}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden}
+  ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px}
+
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.4rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background .4s,box-shadow .4s}
+  nav.scrolled{background:rgba(10,7,4,.97);box-shadow:0 2px 30px rgba(0,0,0,.5)}
+  .logo{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold);cursor:pointer}
+  .logo span{font-style:italic;color:var(--amber)}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:var(--text);text-decoration:none;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;transition:color .3s}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-reserve{background:var(--amber);color:var(--black);padding:.6rem 1.5rem;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Cormorant Garamond',serif;font-weight:500;transition:all .3s}
+  .nav-reserve:hover{background:var(--gold);transform:translateY(-1px)}
+
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:0 4rem}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,#2a1a08 0%,#0a0704 60%)}
+  .hero-pattern{position:absolute;inset:0;opacity:.04;background-image:repeating-linear-gradient(45deg,var(--amber) 0,var(--amber) 1px,transparent 0,transparent 50%);background-size:20px 20px}
+  .hero-glow{position:absolute;right:10%;top:50%;transform:translateY(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(200,131,42,.15) 0%,transparent 70%);border-radius:50%}
+  .hero-content{position:relative;z-index:2;max-width:650px}
+  .hero-eyebrow{font-size:.75rem;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
+  .hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--amber)}
+  .uptime{font-family:'Bebas Neue',sans-serif;letter-spacing:.25em}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(4rem,8vw,7rem);line-height:1;color:var(--cream);margin-bottom:1rem}
+  h1 em{color:var(--gold);font-style:italic}
+  .hero-sub{font-size:1.2rem;color:var(--muted);line-height:1.8;margin-bottom:3rem;max-width:450px;font-weight:300}
+  .hero-cta{display:flex;gap:1.5rem;align-items:center}
+  .btn-primary{background:var(--amber);color:var(--black);padding:1rem 2.5rem;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;font-family:'Cormorant Garamond',serif;font-weight:600;transition:all .3s;text-decoration:none;display:inline-block}
+  .btn-primary:hover{background:var(--gold);transform:translateY(-2px)}
+  .btn-ghost{color:var(--text);font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--muted);padding-bottom:2px;transition:color .3s,border-color .3s}
+  .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
+
+  .ornament{text-align:center;padding:2.5rem;color:var(--amber);font-size:1.2rem;letter-spacing:.5em;opacity:.6}
+
+  .about{padding:6rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;max-width:1200px;margin:0 auto}
+  .about-img{position:relative}
+  .img-placeholder{width:100%;aspect-ratio:4/5;background:linear-gradient(135deg,#1a1208,#2a1f10);border:1px solid rgba(200,131,42,.2);display:flex;align-items:center;justify-content:center;font-size:4rem}
+  .img-frame{position:absolute;bottom:-20px;right:-20px;width:80%;height:80%;border:1px solid rgba(200,131,42,.3);pointer-events:none}
+  .section-label{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+  h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.5rem);color:var(--cream);line-height:1.2;margin-bottom:1.5rem}
+  h2 em{font-style:italic;color:var(--gold)}
+  .about-text{font-size:1.05rem;line-height:1.9;color:var(--muted);font-weight:300}
+  .stats{display:flex;gap:2.5rem;margin-top:2.5rem;border-top:1px solid rgba(200,131,42,.15);padding-top:2rem}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--amber)}
+  .stat-label{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+  .menu-section{padding:6rem 4rem;background:var(--deep);position:relative;overflow:hidden}
+  .menu-section::before{content:'MENU';position:absolute;right:-2%;top:50%;transform:translateY(-50%) rotate(90deg);font-family:'Bebas Neue',sans-serif;font-size:12rem;color:rgba(200,131,42,.04);pointer-events:none}
+  .menu-header{text-align:center;margin-bottom:4rem}
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1100px;margin:0 auto}
+  .menu-card{padding:2rem;border:1px solid rgba(200,131,42,.1);background:rgba(255,255,255,.02);transition:all .4s;position:relative;overflow:hidden;cursor:pointer}
+  .menu-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--amber);transition:width .4s}
+  .menu-card:hover::after{width:100%}
+  .menu-card:hover{background:rgba(200,131,42,.05);transform:translateY(-3px)}
+  .menu-emoji{font-size:2rem;margin-bottom:1rem}
+  .menu-name{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);margin-bottom:.5rem}
+  .menu-desc{font-size:.9rem;color:var(--muted);line-height:1.6;margin-bottom:1rem}
+  .menu-price{color:var(--amber);font-size:1.1rem;font-weight:500}
+
+  .reservation{padding:6rem 4rem;text-align:center;background:linear-gradient(135deg,#0f0b06,#1a1208,#0a0704);position:relative}
+  .reservation::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(200,131,42,.08) 0%,transparent 70%)}
+  .res-content{position:relative;z-index:2;max-width:600px;margin:0 auto}
+  .res-content h2{margin-bottom:1rem}
+  .res-content>p{color:var(--muted);margin-bottom:3rem;font-size:1.1rem}
+  .form-row{display:flex;gap:1rem;margin-bottom:1rem}
+  .form-group{flex:1;text-align:left}
+  .form-group label{display:block;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+  .form-group input,.form-group select{width:100%;padding:.8rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(200,131,42,.2);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;transition:border-color .3s}
+  .form-group input:focus,.form-group select:focus{border-color:var(--amber)}
+  .form-group input.error,.form-group select.error{border-color:#e05555}
+  .form-group select option{background:var(--black)}
+  .err{color:#e05555;font-size:.72rem;margin-top:.25rem;display:none}
+  .err.show{display:block}
+  .btn-full{width:100%;padding:1rem;background:var(--amber);color:var(--black);border:none;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.25em;text-transform:uppercase;font-weight:600;margin-top:.5rem;transition:all .3s}
+  .btn-full:hover{background:var(--gold)}
+  .btn-full:active{transform:scale(.98)}
+
+  .success-box{display:none;background:rgba(200,131,42,.1);border:1px solid var(--amber);padding:2rem}
+  .success-box.show{display:block}
+  .success-box h3{font-family:'Playfair Display',serif;color:var(--gold);margin-bottom:.5rem;font-size:1.5rem}
+
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--amber);color:var(--black);padding:1rem 1.8rem;font-size:.85rem;letter-spacing:.08em;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;max-width:320px}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  footer{padding:3rem 4rem;border-top:1px solid rgba(200,131,42,.1);display:flex;justify-content:space-between;align-items:center}
+  .footer-logo{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);cursor:pointer}
+  .footer-info{font-size:.85rem;color:var(--muted);text-align:center;line-height:1.8}
+  .footer-social{display:flex;gap:1.5rem}
+  .footer-social a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:.1em;transition:color .3s}
+  .footer-social a:hover{color:var(--amber)}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  .back-top{position:fixed;bottom:2rem;left:2rem;width:42px;height:42px;background:var(--amber);color:var(--black);border:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;z-index:50;font-weight:700}
+  .back-top.show{opacity:1;pointer-events:auto}
+  .back-top:hover{background:var(--gold)}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .hero-content>*{opacity:0;animation:fadeUp .8s ease forwards}
+  .hero-eyebrow{animation-delay:.1s}.hero h1{animation-delay:.3s}.hero-sub{animation-delay:.5s}.hero-cta{animation-delay:.7s}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<nav id="nav">
+  <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Ember <span>&</span> Oak</div>
+  <ul class="nav-links">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#reserve">Reserve</a></li>
+  </ul>
+  <button class="nav-reserve" onclick="scrollTo('#reserve')">Book a Table</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-pattern"></div><div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. 2018 · Fine Dining &nbsp;|&nbsp; UPTIME: <span class="uptime" id="uptime">00:00:00</span></div>
+    <h1>Where Fire<br>Meets <em>Flavor</em></h1>
+    <p class="hero-sub">An intimate dining experience crafted around open-flame cooking, seasonal ingredients, and timeless hospitality.</p>
+    <div class="hero-cta">
+      <a href="#reserve" class="btn-primary">Reserve a Table</a>
+      <a href="#menu" class="btn-ghost">View Menu</a>
+    </div>
+  </div>
+</section>
+
+<div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+<section class="about" id="about">
+  <div class="about-img reveal">
+    <div class="img-placeholder">🍽️</div>
+    <div class="img-frame"></div>
+  </div>
+  <div class="reveal">
+    <div class="section-label">Our Story</div>
+    <h2>Crafted with<br><em>Passion & Fire</em></h2>
+    <p class="about-text">Every dish at Ember & Oak tells a story of tradition met with innovation. Chef Marco Delacroix brings two decades of culinary mastery from Lyon to your table — using fire as the essential medium and locally sourced ingredients as the canvas.</p>
+    <div class="stats">
+      <div><div class="stat-num" data-target="12" data-suffix="+">0</div><div class="stat-label">Years of Excellence</div></div>
+      <div><div class="stat-num" data-target="3" data-suffix="">0</div><div class="stat-label">Michelin Stars</div></div>
+      <div><div class="stat-num" data-target="40" data-suffix="K+">0</div><div class="stat-label">Happy Guests</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-section" id="menu">
+  <div class="menu-header reveal">
+    <div class="section-label">Seasonal Selections</div>
+    <h2>Tonight's <em>Signature</em> Dishes</h2>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card reveal"><div class="menu-emoji">🥩</div><div class="menu-name">Oak-Smoked Prime Rib</div><div class="menu-desc">48-hour dry-aged bone-in rib, smoked over white oak, served with truffle au jus and roasted root vegetables.</div><div class="menu-price">₹2,800</div></div>
+    <div class="menu-card reveal"><div class="menu-emoji">🦞</div><div class="menu-name">Flame-Kissed Lobster</div><div class="menu-desc">Whole Maine lobster, charred over open flame, finished with saffron butter and micro herb salad.</div><div class="menu-price">₹3,400</div></div>
+    <div class="menu-card reveal"><div class="menu-emoji">🍄</div><div class="menu-name">Wild Mushroom Risotto</div><div class="menu-desc">Aged Carnaroli rice with porcini, truffle oil, Parmesan, and a delicate smoked cream emulsion.</div><div class="menu-price">₹1,600</div></div>
+    <div class="menu-card reveal"><div class="menu-emoji">🐟</div><div class="menu-name">Cedar-Plank Sea Bass</div><div class="menu-desc">Wild-caught sea bass, cedar plank roasted with fennel, lemon confit, and caper beurre blanc.</div><div class="menu-price">₹2,200</div></div>
+    <div class="menu-card reveal"><div class="menu-emoji">🥗</div><div class="menu-name">Ember Roasted Beet Salad</div><div class="menu-desc">Char-roasted heirloom beets, whipped goat cheese, candied walnut, and aged balsamic reduction.</div><div class="menu-price">₹900</div></div>
+    <div class="menu-card reveal"><div class="menu-emoji">🍫</div><div class="menu-name">Valrhona Chocolate Tart</div><div class="menu-desc">Dark 70% Valrhona ganache, smoked sea salt caramel, and single malt whiskey crème anglaise.</div><div class="menu-price">₹750</div></div>
+  </div>
+</section>
+
+<section class="reservation" id="reserve">
+  <div class="res-content">
+    <div class="section-label reveal">Reservations</div>
+    <h2 class="reveal">Join Us for an<br><em>Unforgettable Evening</em></h2>
+    <p class="reveal">Reserve your table and let us take care of the rest. Private dining rooms available for special occasions.</p>
+    <div id="resForm" class="reveal">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="rName" placeholder="Your name">
+          <div class="err" id="eRname">Please enter your name.</div>
+        </div>
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" id="rPhone" placeholder="+91 00000 00000">
+          <div class="err" id="eRphone">Please enter a valid number.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="rDate">
+          <div class="err" id="eRdate">Please select a future date.</div>
+        </div>
+        <div class="form-group">
+          <label>Guests *</label>
+          <select id="rGuests">
+            <option value="">Select guests</option>
+            <option>1 Guest</option><option>2 Guests</option>
+            <option>4 Guests</option><option>6+ Guests</option>
+          </select>
+          <div class="err" id="eRguests">Please select number of guests.</div>
+        </div>
+      </div>
+      <button class="btn-full" id="resBtn" onclick="submitRes()">Confirm Reservation</button>
+    </div>
+    <div class="success-box" id="resSuccess">
+      <h3>✦ Reservation Confirmed!</h3>
+      <p style="color:var(--muted);margin-top:.5rem">We'll send a confirmation shortly. We look forward to hosting you at Ember & Oak.</p>
+      <button class="btn-primary" style="margin-top:1.5rem" onclick="resetRes()">Make Another Reservation</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Ember & Oak</div>
+  <div class="footer-info">12 Heritage Lane, Banjara Hills · Tue–Sun, 7PM–11PM<br>+91 98765 43210 · hello@emberandoak.in</div>
+  <div class="footer-social">
+    <a href="#" onclick="toast('Opening Instagram ↗')">Instagram</a>
+    <a href="#" onclick="toast('Opening Zomato ↗')">Zomato</a>
+    <a href="#" onclick="toast('Opening Maps ↗')">Maps</a>
+  </div>
+</footer>
+
+<script>
+// Uptime counter
+const t0 = Date.now();
+setInterval(()=>{
+  const s = Math.floor((Date.now()-t0)/1000);
+  document.getElementById('uptime').textContent =
+    [Math.floor(s/3600), Math.floor((s%3600)/60), s%60].map(n=>String(n).padStart(2,'0')).join(':');
+}, 1000);
+
+// Navbar + back-to-top on scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled', scrollY>60);
+  document.getElementById('backTop').classList.toggle('show', scrollY>400);
+});
+
+// Scroll helper
+function scrollTo(id){ document.querySelector(id).scrollIntoView({behavior:'smooth'}); }
+
+// Smooth anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// Reveal on scroll
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add('visible'); ro.unobserve(e.target);} });
+},{threshold:.13});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// Counter animation
+const co = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.target, suffix = el.dataset.suffix||'';
+    let cur=0; const step=target/50;
+    const iv = setInterval(()=>{
+      cur+=step;
+      if(cur>=target){ el.textContent=target+suffix; clearInterval(iv); }
+      else el.textContent=Math.floor(cur);
+    },30);
+    co.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
+
+// Toast
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// Set min date to today
+const rd=document.getElementById('rDate');
+const now=new Date(); rd.min=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+
+// Form validation
+function submitRes(){
+  let ok=true;
+  const fields=[
+    {el:'rName', err:'eRname', check: v=>v.trim().length>1},
+    {el:'rPhone',err:'eRphone',check: v=>/^[\d\s\+\-]{8,}$/.test(v)},
+    {el:'rDate', err:'eRdate', check: v=>!!v},
+    {el:'rGuests',err:'eRguests',check:v=>!!v}
+  ];
+  fields.forEach(({el,err,check})=>{
+    const inp=document.getElementById(el);
+    const errEl=document.getElementById(err);
+    const valid=check(inp.value);
+    inp.classList.toggle('error',!valid);
+    errEl.classList.toggle('show',!valid);
+    if(!valid) ok=false;
+  });
+  if(ok){
+    document.getElementById('resForm').style.display='none';
+    document.getElementById('resSuccess').classList.add('show');
+    toast('✦ Table reserved! Confirmation coming soon.');
+  }
+}
+function resetRes(){
+  document.getElementById('resForm').style.display='block';
+  document.getElementById('resSuccess').classList.remove('show');
+  ['rName','rPhone','rDate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rGuests').value='';
+}
+</script>
+</body>
+</html>

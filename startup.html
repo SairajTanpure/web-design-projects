@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora — Build Faster, Ship Smarter</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f0f0eb;--black:#0d0d0d;--accent:#ff4d00;--white:#ffffff;--gray:#6b6b6b;--card:#e8e8e2}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--black);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+  ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.2rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(240,240,235,.93);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06);transition:box-shadow .3s}
+  nav.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.08)}
+  .logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--black);letter-spacing:-.02em;cursor:pointer}
+  .logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:var(--gray);text-decoration:none;font-size:.9rem;transition:color .2s}
+  .nav-links a:hover{color:var(--black)}
+  .nav-cta{background:var(--black);color:var(--white);padding:.65rem 1.5rem;font-size:.85rem;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:100px;transition:all .2s}
+  .nav-cta:hover{background:var(--accent);transform:translateY(-1px)}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden}
+  .hero-decor{position:absolute;right:-5%;top:20%;width:400px;height:400px;border-radius:50%;background:var(--accent);opacity:.06;filter:blur(80px);pointer-events:none}
+  .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--white);border:1px solid rgba(0,0,0,.1);padding:.4rem 1rem;border-radius:100px;font-size:.8rem;color:var(--gray);margin-bottom:2rem}
+  .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+  h1{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,9vw,9rem);font-weight:800;line-height:.9;letter-spacing:-.04em;color:var(--black);margin-bottom:2rem}
+  h1 .acc{color:var(--accent)}
+  h1 .out{-webkit-text-stroke:2px var(--black);color:transparent}
+  .hero-sub{font-size:1.15rem;color:var(--gray);max-width:520px;line-height:1.7;margin-bottom:3rem}
+  .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .btn-black{background:var(--black);color:var(--white);padding:1rem 2.5rem;border-radius:100px;font-size:.95rem;font-weight:500;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;display:inline-block}
+  .btn-black:hover{background:var(--accent);transform:translateY(-2px)}
+  .btn-outline{background:transparent;color:var(--black);padding:1rem 2.5rem;border-radius:100px;font-size:.95rem;font-weight:500;border:1.5px solid rgba(0,0,0,.2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;display:inline-block}
+  .btn-outline:hover{border-color:var(--black);transform:translateY(-2px)}
+  .hero-stats{display:flex;gap:4rem;margin-top:5rem;padding-top:3rem;border-top:1px solid rgba(0,0,0,.1);flex-wrap:wrap;justify-content:center}
+  .stat-n{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;letter-spacing:-.04em}
+  .stat-l{font-size:.85rem;color:var(--gray);margin-top:.2rem}
+
+  .logos{padding:3rem 4rem;border-top:1px solid rgba(0,0,0,.08);border-bottom:1px solid rgba(0,0,0,.08);text-align:center}
+  .logos-label{font-size:.8rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem}
+  .logos-row{display:flex;gap:3rem;justify-content:center;align-items:center;flex-wrap:wrap}
+  .logo-item{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:rgba(0,0,0,.22);letter-spacing:-.02em;transition:color .3s;cursor:default}
+  .logo-item:hover{color:rgba(0,0,0,.5)}
+
+  .features{padding:8rem 4rem;max-width:1200px;margin:0 auto}
+  .section-tag{display:inline-block;background:var(--black);color:var(--white);padding:.3rem .9rem;border-radius:100px;font-size:.75rem;font-weight:500;margin-bottom:1.5rem;letter-spacing:.05em}
+  h2{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem}
+  .features-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem;gap:2rem;flex-wrap:wrap}
+  .features-desc{font-size:1rem;color:var(--gray);max-width:300px;line-height:1.6}
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+  .feat-card{background:var(--card);border-radius:20px;padding:2rem;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden;cursor:default}
+  .feat-card:first-child{grid-column:span 2;background:var(--black);color:var(--white)}
+  .feat-card:hover{transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.1)}
+  .feat-icon{width:48px;height:48px;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.5rem}
+  .feat-card:first-child .feat-icon{background:rgba(255,77,0,.2)}
+  .feat-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:.75rem;letter-spacing:-.02em}
+  .feat-desc{font-size:.9rem;color:var(--gray);line-height:1.6}
+  .feat-card:first-child .feat-desc{color:rgba(255,255,255,.5)}
+  .feat-card:first-child .feat-title{color:var(--white)}
+  .feat-tag{display:inline-block;margin-top:1.5rem;background:var(--accent);color:var(--white);padding:.3rem .8rem;border-radius:100px;font-size:.75rem;font-weight:500}
+
+  .pricing{padding:8rem 4rem;background:var(--black)}
+  .pricing-header{text-align:center;margin-bottom:4rem}
+  .pricing-header h2{color:var(--white)}
+  .pricing-header p{color:rgba(255,255,255,.4);margin-top:1rem}
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:0 auto}
+  .price-card{background:rgba(255,255,255,.05);border-radius:20px;padding:2.5rem;border:1px solid rgba(255,255,255,.08);transition:transform .3s}
+  .price-card.featured{background:var(--accent);border-color:var(--accent);transform:scale(1.04)}
+  .price-card:hover{transform:translateY(-4px)}
+  .price-card.featured:hover{transform:scale(1.04) translateY(-4px)}
+  .plan-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1.5rem}
+  .price-card.featured .plan-name{color:rgba(255,255,255,.85)}
+  .plan-price{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--white);letter-spacing:-.04em;margin-bottom:.25rem}
+  .plan-period{font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:2rem}
+  .plan-features{list-style:none;margin-bottom:2.5rem}
+  .plan-features li{font-size:.9rem;color:rgba(255,255,255,.6);padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:.75rem}
+  .plan-features li::before{content:'✓';color:var(--accent);font-weight:700}
+  .price-card.featured .plan-features li::before{color:var(--white)}
+  .plan-btn{width:100%;padding:.9rem;background:rgba(255,255,255,.1);color:var(--white);border:none;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;transition:all .2s}
+  .price-card.featured .plan-btn{background:var(--white);color:var(--accent)}
+  .plan-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+  .price-card.featured .plan-btn:hover{background:rgba(255,255,255,.92)}
+
+  /* WAITLIST */
+  .waitlist-section{padding:8rem 4rem;text-align:center;position:relative}
+  .waitlist-section h2{font-size:clamp(2.5rem,6vw,5rem);margin-bottom:1.5rem}
+  .waitlist-section h2 .out{-webkit-text-stroke:2px var(--black);color:transparent}
+  .waitlist-section p{color:var(--gray);max-width:420px;margin:0 auto 3rem}
+  .waitlist-form{display:flex;gap:.75rem;justify-content:center;max-width:480px;margin:0 auto;flex-wrap:wrap}
+  .waitlist-form input{flex:1;padding:.9rem 1.4rem;border:1.5px solid rgba(0,0,0,.15);border-radius:100px;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;background:var(--white);transition:border-color .25s;min-width:200px}
+  .waitlist-form input:focus{border-color:var(--black)}
+  .waitlist-form input.error{border-color:#e05555}
+  .waitlist-success{display:none;margin-top:1.5rem;color:var(--accent);font-weight:600;font-family:'Syne',sans-serif}
+  .waitlist-success.show{display:block}
+
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--black);color:var(--white);padding:.9rem 1.6rem;font-size:.85rem;border-radius:10px;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;max-width:300px}
+  .toast.show{transform:translateY(0);opacity:1}
+
+  footer{padding:2rem 4rem;border-top:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  .footer-copy{font-size:.85rem;color:var(--gray)}
+
+  .back-top{position:fixed;bottom:2rem;left:2rem;width:42px;height:42px;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;z-index:50;border-radius:50%;font-weight:700}
+  .back-top.show{opacity:1;pointer-events:auto}
+  .back-top:hover{background:var(--accent)}
+
+  .reveal{opacity:0;transform:translateY(25px);transition:opacity .65s ease,transform .65s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .hero-badge{animation:fadeIn .5s ease both}
+  h1{animation:fadeIn .7s ease .1s both}
+  .hero-sub{animation:fadeIn .7s ease .2s both}
+  .hero-actions{animation:fadeIn .7s ease .3s both}
+  .hero-stats{animation:fadeIn .7s ease .4s both}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<nav id="nav">
+  <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">Nex<span>ora</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">Product</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#waitlist">Get Started</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get Started Free</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-decor"></div>
+  <div class="hero-badge"><div class="badge-dot"></div>Now in public beta — free to try</div>
+  <h1>Build <span class="acc">Faster.</span><br><span class="out">Ship</span> Smarter.</h1>
+  <p class="hero-sub">Nexora is the all-in-one developer platform that helps teams go from idea to production in record time — without the chaos.</p>
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-black">Start for Free</a>
+    <a href="#features" class="btn-outline">See How It Works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n" data-target="50" data-suffix="K+">0</div><div class="stat-l">Developers</div></div>
+    <div class="stat"><div class="stat-n" data-target="2" data-suffix="M+">0</div><div class="stat-l">Deploys/Month</div></div>
+    <div class="stat"><div class="stat-n" data-target="99" data-suffix=".9%">0</div><div class="stat-l">Uptime SLA</div></div>
+  </div>
+</section>
+
+<div class="logos">
+  <div class="logos-label">Trusted by teams at</div>
+  <div class="logos-row">
+    <div class="logo-item">STRIPE</div>
+    <div class="logo-item">NOTION</div>
+    <div class="logo-item">FIGMA</div>
+    <div class="logo-item">LINEAR</div>
+    <div class="logo-item">VERCEL</div>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <div class="features-header reveal">
+    <div>
+      <div class="section-tag">Features</div>
+      <h2>Everything your<br>team needs</h2>
+    </div>
+    <p class="features-desc">Stop juggling 10 tools. Nexora brings your entire dev workflow under one roof.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Instant Deployments</div>
+      <div class="feat-desc">Push to git and watch your code go live in under 30 seconds. Automatic previews, rollbacks, and zero-config CI/CD built in.</div>
+      <span class="feat-tag">Most Popular</span>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">Secure by Default</div>
+      <div class="feat-desc">SOC2 compliant infrastructure with end-to-end encryption on all data at rest and in transit.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Real-time Analytics</div>
+      <div class="feat-desc">Live dashboards, error tracking, and performance monitoring without installing a single SDK.</div>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">🤝</div>
+      <div class="feat-title">Team Collaboration</div>
+      <div class="feat-desc">Built-in review apps, shared environments, and branch-based permissions for seamless teamwork.</div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="pricing-header reveal">
+    <div class="section-tag" style="background:rgba(255,255,255,.1);color:white">Pricing</div>
+    <h2>Simple, transparent pricing</h2>
+    <p>No hidden fees. No surprise bills. Start free.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">₹0</div>
+      <div class="plan-period">Free forever</div>
+      <ul class="plan-features">
+        <li>3 Projects</li><li>100 Deploys/month</li>
+        <li>1 Team Member</li><li>Community Support</li>
+      </ul>
+      <button class="plan-btn" onclick="selectPlan('Starter — Free')">Get Started</button>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">₹999</div>
+      <div class="plan-period">per month</div>
+      <ul class="plan-features">
+        <li>Unlimited Projects</li><li>Unlimited Deploys</li>
+        <li>5 Team Members</li><li>Priority Support</li>
+      </ul>
+      <button class="plan-btn" onclick="selectPlan('Pro — ₹999/mo')">Start Free Trial</button>
+    </div>
+    <div class="price-card reveal">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price">Custom</div>
+      <div class="plan-period">contact us</div>
+      <ul class="plan-features">
+        <li>Unlimited Everything</li><li>SSO & Audit Logs</li>
+        <li>Dedicated Infra</li><li>24/7 SLA Support</li>
+      </ul>
+      <button class="plan-btn" onclick="selectPlan('Enterprise')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<section class="waitlist-section" id="waitlist">
+  <div class="reveal">
+    <h2>Ready to ship<br><span class="out">10x faster?</span></h2>
+    <p>Join 50,000+ developers who trust Nexora with their workflow. Get instant access.</p>
+    <div class="waitlist-form">
+      <input type="email" id="wEmail" placeholder="Enter your email address">
+      <button class="btn-black" onclick="joinWaitlist()">Start Building →</button>
+    </div>
+    <div class="waitlist-success" id="wSuccess">🎉 You're in! Check your inbox for next steps.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;cursor:pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">Nex<span style="color:#ff4d00">ora</span></div>
+  <div class="footer-copy">© 2025 Nexora, Inc. All rights reserved.</div>
+</footer>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>60);
+  document.getElementById('backTop').classList.toggle('show',scrollY>400);
+});
+
+// Smooth anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// Reveal
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// Counters
+const co=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el=e.target, target=+el.dataset.target, suffix=el.dataset.suffix||'';
+    let cur=0; const step=target/50;
+    const iv=setInterval(()=>{
+      cur+=step;
+      if(cur>=target){el.textContent=target+suffix;clearInterval(iv);}
+      else el.textContent=Math.floor(cur);
+    },30);
+    co.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>co.observe(el));
+
+// Toast
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// Plan selection
+function selectPlan(plan){
+  document.getElementById('waitlist').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    document.getElementById('wEmail').focus();
+    toast(`✓ ${plan} selected — enter your email below!`);
+  },600);
+}
+
+// Waitlist
+function joinWaitlist(){
+  const inp=document.getElementById('wEmail');
+  const val=inp.value.trim();
+  const valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  inp.classList.toggle('error',!valid);
+  if(!valid){ toast('Please enter a valid email address.'); return; }
+  document.getElementById('wSuccess').classList.add('show');
+  inp.value='';
+  inp.classList.remove('error');
+  toast('🎉 Welcome to Nexora! Check your inbox.');
+}
+
+// Enter key for waitlist
+document.getElementById('wEmail').addEventListener('keydown',e=>{
+  if(e.key==='Enter') joinWaitlist();
+});
+</script>
+</body>
+</html>
